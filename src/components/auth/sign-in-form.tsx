@@ -10,15 +10,22 @@ export function SignInForm() {
 
   const handleSignIn = async () => {
     try {
-      router.push("/api/threads")
+      const response = await fetch("/api/threads/user");
+      if (response.ok) {
+        // Already authenticated, redirect to home
+        router.push("/");
+        return;
+      }
+      // Not authenticated, start auth flow
+      router.push("/api/threads");
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to initiate sign in",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   return (
     <div className="grid gap-6">

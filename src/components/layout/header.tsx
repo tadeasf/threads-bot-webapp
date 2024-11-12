@@ -20,32 +20,48 @@ import {
 import { useAuth } from "@/hooks/use-auth"
 import { Menu } from "lucide-react"
 import { ThemeToggle } from "@/components/theme/theme-toggle"
+import React from "react"
 
 export function Header() {
   const pathname = usePathname()
   const router = useRouter()
-  const { user, isAuthenticated } = useAuth()
+  const { user, isAuthenticated, setUser } = useAuth()
+
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("/api/threads/user");
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    if (!user && !pathname.startsWith("/sign-in")) {
+      fetchUser();
+    }
+  }, [user, pathname, setUser]);
 
   const revokeToken = async () => {
     try {
-      const response = await fetch("/api/auth/revoke", {
+      const response = await fetch("/api/threads/revoke", {
         method: "POST",
-      })
+      });
 
       if (!response.ok) {
-        throw new Error("Failed to revoke token")
+        throw new Error("Failed to revoke token");
       }
 
-      // Clear user state
-      useAuth.getState().setUser(null)
-      
-      // Redirect to home page
-      router.push("/")
-      router.refresh()
+      setUser(null);
+      router.push("/");
+      router.refresh();
     } catch (error) {
-      console.error("Error revoking token:", error)
+      console.error("Error revoking token:", error);
     }
-  }
+  };
 
   return (
     <header className="border-b">
