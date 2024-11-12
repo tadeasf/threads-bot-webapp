@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { exchangeForLongLivedToken } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -11,7 +10,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const tokenResponse = await fetch("https://graph.threads.net/oauth/access_token", {
+    const tokenResponse = await fetch("https://www.threads.net/oauth/access_token", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -31,11 +30,8 @@ export async function GET(request: NextRequest) {
       throw new Error(data.error.message);
     }
 
-    // Exchange for long-lived token
-    const longLivedToken = await exchangeForLongLivedToken(data.access_token);
-
     const response = NextResponse.redirect(new URL(state, request.url));
-    response.cookies.set("threads_token", longLivedToken, {
+    response.cookies.set("threads_token", data.access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

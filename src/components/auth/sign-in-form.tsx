@@ -10,7 +10,7 @@ export function SignInForm() {
 
   const handleSignIn = async () => {
     try {
-      router.push("/api/threads/auth")
+      router.push("/api/auth")
     } catch (error) {
       toast({
         title: "Error",

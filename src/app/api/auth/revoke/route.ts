@@ -5,7 +5,7 @@ export async function POST() {
   try {
     // Clear the access token cookie
     const cookieStore = await cookies()
-    cookieStore.delete("threads_access_token")
+    cookieStore.delete("threads_token")
     
     return NextResponse.json({ success: true })
   } catch (error) {

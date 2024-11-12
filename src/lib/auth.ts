@@ -5,35 +5,43 @@ export async function getThreadsToken() {
   return cookieStore.get("threads_token")?.value;
 }
 
-export async function exchangeForLongLivedToken(shortLivedToken: string) {
-  const response = await fetch(`https://graph.threads.net/access_token?` + 
-    new URLSearchParams({
-      grant_type: "th_exchange_token",
-      client_secret: process.env.THREADS_APP_SECRET!,
-      access_token: shortLivedToken,
-    }));
-
-  const data = await response.json();
-  return data.access_token;
-}
-
 export async function isAuthenticated() {
   const token = await getThreadsToken();
   return !!token;
 }
 
-export async function refreshToken(token: string) {
-  const response = await fetch(`https://graph.threads.net/refresh_access_token?` + 
-    new URLSearchParams({
-      grant_type: "th_refresh_token",
-      access_token: token,
-    }));
-
-  const data = await response.json();
-  return data.access_token;
-}
-
-export async function revokeToken(token: string) {
+export async function revokeToken() {
   const cookieStore = await cookies();
   cookieStore.delete("threads_token");
+}
+
+export async function getUserData(token: string) {
+  const response = await fetch("https://www.threads.net/api/graphql", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+        query UserData {
+          me {
+            id
+            username
+            name
+            biography: threads_biography
+            profilePicture: threads_profile_picture_url
+          }
+        }
+      `
+    })
+  });
+
+  const data = await response.json();
+  
+  if (data.errors) {
+    throw new Error(data.errors[0].message);
+  }
+
+  return data.data.me;
 } 

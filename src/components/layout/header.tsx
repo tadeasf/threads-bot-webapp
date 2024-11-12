@@ -28,7 +28,7 @@ export function Header() {
 
   const revokeToken = async () => {
     try {
-      const response = await fetch("/api/threads/revoke", {
+      const response = await fetch("/api/auth/revoke", {
         method: "POST",
       })
 
