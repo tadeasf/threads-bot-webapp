@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { exchangeForLongLivedToken } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -30,14 +31,15 @@ export async function GET(request: NextRequest) {
       throw new Error(data.error.message);
     }
 
-    // Here you would typically store the token in a secure session/cookie
-    // For this example, we'll use cookies
+    // Exchange for long-lived token
+    const longLivedToken = await exchangeForLongLivedToken(data.access_token);
+
     const response = NextResponse.redirect(new URL(state, request.url));
-    response.cookies.set("threads_token", data.access_token, {
+    response.cookies.set("threads_token", longLivedToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60, // 1 hour
+      maxAge: 60 * 60 * 24 * 60, // 60 days
     });
 
     return response;
