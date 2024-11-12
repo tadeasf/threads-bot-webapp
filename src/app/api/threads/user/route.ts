@@ -34,6 +34,12 @@ export async function GET(request: NextRequest) {
     const data = await response.json();
     
     if (data.errors) {
+      if (data.errors[0]?.code === 1349245) {
+        return NextResponse.json(
+          { error: "Please accept the app invite in Threads first" }, 
+          { status: 403 }
+        );
+      }
       throw new Error(data.errors[0].message);
     }
 

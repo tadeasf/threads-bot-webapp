@@ -16,6 +16,16 @@ export function SignInForm() {
         router.push("/");
         return;
       }
+      
+      const data = await response.json();
+      if (response.status === 403 && data.error.includes("accept the app invite")) {
+        toast({
+          title: "App Invite Required",
+          description: data.error,
+          variant: "destructive",
+        });
+        return;
+      }
       // Not authenticated, start auth flow
       router.push("/api/threads");
     } catch (error) {
