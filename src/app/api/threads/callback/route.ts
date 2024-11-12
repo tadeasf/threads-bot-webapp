@@ -10,21 +10,28 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    console.log("ENV vars check:", {
+      appId: process.env.THREADS_APP_ID,
+      secret: process.env.THREADS_APP_SECRET,
+      callback: process.env.THREADS_CALLBACK_URL
+    });
+
     const tokenResponse = await fetch("https://graph.threads.net/oauth/access_token", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        client_id: process.env.THREADS_APP_ID!,
-        client_secret: process.env.THREADS_APP_SECRET!,
+        client_id: process.env.THREADS_APP_ID || "",
+        client_secret: process.env.THREADS_APP_SECRET || "",
         grant_type: "authorization_code",
-        redirect_uri: process.env.THREADS_CALLBACK_URL!,
+        redirect_uri: process.env.THREADS_CALLBACK_URL || "",
         code: code.replace(/#_$/, ''), // Remove #_ if present
-      }),
+      }).toString(),
     });
 
     const data = await tokenResponse.json();
+    console.log("Token response:", data);
 
     if (data.error) {
       console.error("Token error:", data.error);
