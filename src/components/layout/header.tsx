@@ -18,6 +18,8 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/hooks/use-auth"
+import { Menu } from "lucide-react"
+import { ThemeToggle } from "@/components/theme/theme-toggle"
 
 export function Header() {
   const pathname = usePathname()
@@ -51,50 +53,63 @@ export function Header() {
         <NavigationMenu className="flex-1">
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Navigation</NavigationMenuTrigger>
+              <NavigationMenuTrigger>
+                <Menu className="h-5 w-5" />
+              </NavigationMenuTrigger>
               <NavigationMenuContent>
-                <Link href="/" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                  Home
-                </Link>
-                {!isAuthenticated && (
-                  <Link href="/sign-in" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                    Sign In
+                <div className="min-w-[200px] p-2">
+                  <Link 
+                    href="/" 
+                    className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                  >
+                    Home
                   </Link>
-                )}
+                  {!isAuthenticated && (
+                    <Link 
+                      href="/sign-in" 
+                      className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    >
+                      Sign In
+                    </Link>
+                  )}
+                </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
 
-        {isAuthenticated && user && (
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <div className="flex items-center gap-2">
-                <Avatar>
-                  <AvatarImage src={user.threads_profile_picture_url} />
-                  <AvatarFallback>{user.username?.[0]}</AvatarFallback>
-                </Avatar>
-                <Badge variant="outline">{user.username}</Badge>
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-80">
-              <div className="grid gap-4 p-4">
-                <div className="space-y-2">
-                  <h4 className="font-medium leading-none">{user.name}</h4>
-                  <p className="text-sm text-muted-foreground">{user.threads_biography}</p>
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          {isAuthenticated && user && (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <div className="flex items-center gap-2">
+                  <Avatar>
+                    <AvatarImage src={user.threads_profile_picture_url} />
+                    <AvatarFallback>{user.username?.[0]}</AvatarFallback>
+                  </Avatar>
+                  <Badge variant="outline">{user.username}</Badge>
                 </div>
-                <DropdownMenuItem
-                  onClick={() => {
-                    revokeToken()
-                    useAuth.getState().setUser(null)
-                  }}
-                >
-                  Sign out
-                </DropdownMenuItem>
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-80">
+                <div className="grid gap-4 p-4">
+                  <div className="space-y-2">
+                    <h4 className="font-medium leading-none">{user.name}</h4>
+                    <p className="text-sm text-muted-foreground">{user.threads_biography}</p>
+                  </div>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      revokeToken()
+                      useAuth.getState().setUser(null)
+                    }}
+                  >
+                    Sign out
+                  </DropdownMenuItem>
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
       </div>
     </header>
   )
