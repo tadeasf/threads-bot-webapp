@@ -3,30 +3,23 @@
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/hooks/use-auth"
 
 export function SignInForm() {
   const router = useRouter()
   const { toast } = useToast()
+  const { setToken } = useAuth()
 
   const handleSignIn = async () => {
     try {
+      // First check if we're already authenticated
       const response = await fetch("/api/threads/user");
       if (response.ok) {
-        // Already authenticated, redirect to home
         router.push("/");
         return;
       }
       
-      const data = await response.json();
-      if (response.status === 403 && data.error.includes("accept the app invite")) {
-        toast({
-          title: "App Invite Required",
-          description: data.error,
-          variant: "destructive",
-        });
-        return;
-      }
-      // Not authenticated, start auth flow
+      // If not authenticated, start the OAuth flow
       router.push("/api/threads");
     } catch (error) {
       toast({
