@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
         client_id: process.env.THREADS_APP_ID!,
         client_secret: process.env.THREADS_APP_SECRET!,
         grant_type: "authorization_code",
-        redirect_uri: process.env.THREADS_REDIRECT_URI!,
+        redirect_uri: process.env.THREADS_CALLBACK_URL!,
         code,
       }),
     });
@@ -43,4 +43,4 @@ export async function GET(request: NextRequest) {
     console.error("Auth error:", error);
     return NextResponse.redirect(new URL("/auth/error", request.url));
   }
-} 
+}

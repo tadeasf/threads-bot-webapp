@@ -1,14 +1,11 @@
-"use client"
-
-import { create } from "zustand"
-import { persist } from "zustand/middleware"
+import { create } from 'zustand'
 
 interface User {
   id: string
   username: string
   name: string
-  threads_profile_picture_url: string
   threads_biography: string
+  threads_profile_picture_url: string
 }
 
 interface AuthState {
@@ -17,15 +14,8 @@ interface AuthState {
   setUser: (user: User | null) => void
 }
 
-export const useAuth = create<AuthState>()(
-  persist(
-    (set) => ({
-      user: null,
-      isAuthenticated: false,
-      setUser: (user) => set({ user, isAuthenticated: !!user }),
-    }),
-    {
-      name: "auth-storage",
-    }
-  )
-) 
+export const useAuth = create<AuthState>((set) => ({
+  user: null,
+  isAuthenticated: false,
+  setUser: (user) => set({ user, isAuthenticated: !!user }),
+})) 

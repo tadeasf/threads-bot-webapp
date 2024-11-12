@@ -58,20 +58,20 @@ export function Header() {
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <div className="min-w-[200px] p-2">
-                  <Link 
-                    href="/" 
-                    className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                  >
+                  <Link href="/" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                     Home
                   </Link>
                   {!isAuthenticated && (
-                    <Link 
-                      href="/sign-in" 
-                      className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
+                    <Link href="/sign-in" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                       Sign In
                     </Link>
                   )}
+                  <Link href="/privacy-policy" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                    Privacy Policy
+                  </Link>
+                  <Link href="/tos" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                    Terms of Service
+                  </Link>
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>

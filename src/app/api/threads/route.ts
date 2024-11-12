@@ -14,10 +14,10 @@ export async function GET(request: NextRequest) {
 
   const authUrl = new URL("https://www.threads.net/oauth/authorize");
   authUrl.searchParams.set("client_id", process.env.THREADS_APP_ID!);
-  authUrl.searchParams.set("redirect_uri", process.env.AUTH_THREADS_CALLBACK_URL!);
+  authUrl.searchParams.set("redirect_uri", process.env.THREADS_CALLBACK_URL!);
   authUrl.searchParams.set("response_type", "code");
   authUrl.searchParams.set("scope", SCOPES.join(","));
   authUrl.searchParams.set("state", returnUrl);
 
   return NextResponse.redirect(authUrl.toString());
-} 
+}
