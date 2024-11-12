@@ -10,7 +10,7 @@ export function SignInForm() {
 
   const handleSignIn = async () => {
     try {
-      const response = await fetch("/api/threads/user");
+      const response = await fetch("/threads/user");
       if (response.ok) {
         // Already authenticated, redirect to home
         router.push("/");
@@ -27,7 +27,7 @@ export function SignInForm() {
         return;
       }
       // Not authenticated, start auth flow
-      router.push("/api/threads");
+      router.push("/threads");
     } catch (error) {
       toast({
         title: "Error",

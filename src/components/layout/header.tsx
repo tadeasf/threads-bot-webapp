@@ -30,7 +30,7 @@ export function Header() {
   React.useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch("/api/threads/user");
+        const response = await fetch("/threads/user");
         if (response.ok) {
           const userData = await response.json();
           setUser(userData);
@@ -47,7 +47,7 @@ export function Header() {
 
   const revokeToken = async () => {
     try {
-      const response = await fetch("/api/threads/revoke", {
+      const response = await fetch("/threads/revoke", {
         method: "POST",
       });
 
