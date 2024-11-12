@@ -3,24 +3,32 @@ import { cookies } from "next/headers";
 
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
-  const shortLivedToken = await cookieStore.get("threads_token");
+  const shortLivedToken = cookieStore.get("threads_token");
 
   if (!shortLivedToken) {
     return NextResponse.json({ error: "No token found" }, { status: 401 });
   }
 
   try {
-    const response = await fetch(
-      `https://graph.threads.net/access_token?grant_type=th_exchange_token&client_secret=${process.env.THREADS_APP_SECRET}&access_token=${shortLivedToken.value}`
-    );
+    const response = await fetch("https://graph.threads.net/access_token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        grant_type: "th_exchange_token",
+        client_secret: process.env.THREADS_APP_SECRET || "",
+        access_token: shortLivedToken.value,
+      }).toString(),
+    });
 
     const data = await response.json();
+    console.log("Exchange token response:", data);
 
     if (data.error) {
       throw new Error(data.error.message);
     }
 
-    // Set the long-lived token in an HTTP-only cookie
     const cookieResponse = NextResponse.json({ expires_in: data.expires_in });
     cookieResponse.cookies.set("threads_token", data.access_token, {
       httpOnly: true,
