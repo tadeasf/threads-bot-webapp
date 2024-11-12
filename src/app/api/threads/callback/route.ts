@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const tokenResponse = await fetch("https://www.threads.net/oauth/access_token", {
+    const tokenResponse = await fetch("https://graph.threads.net/oauth/access_token", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -20,14 +20,15 @@ export async function GET(request: NextRequest) {
         client_secret: process.env.THREADS_APP_SECRET!,
         grant_type: "authorization_code",
         redirect_uri: process.env.THREADS_CALLBACK_URL!,
-        code,
+        code: code.replace(/#_$/, ''), // Remove #_ if present
       }),
     });
 
     const data = await tokenResponse.json();
 
     if (data.error) {
-      throw new Error(data.error.message);
+      console.error("Token error:", data.error);
+      throw new Error(data.error.error_message || data.error.message);
     }
 
     const response = NextResponse.redirect(new URL(state, request.url));

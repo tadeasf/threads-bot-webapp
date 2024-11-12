@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const returnUrl = searchParams.get("return_url") || "/";
 
-  const authUrl = new URL("https://www.threads.net/oauth/authorize");
+  const authUrl = new URL("https://graph.threads.net/oauth/authorize");
   authUrl.searchParams.set("client_id", process.env.THREADS_APP_ID!);
   authUrl.searchParams.set("redirect_uri", process.env.THREADS_CALLBACK_URL!);
   authUrl.searchParams.set("response_type", "code");

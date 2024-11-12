@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const response = await fetch("https://www.threads.net/api/graphql", {
+    const response = await fetch("https://graph.threads.net/api/graphql", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token.value}`,
